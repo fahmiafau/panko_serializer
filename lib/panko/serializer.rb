@@ -72,13 +72,14 @@ module Panko
       def has_one(name, options = {})
         serializer_const = options[:serializer]
         serializer_const = Panko::SerializerResolver.resolve(name.to_s) if serializer_const.nil?
+        serializer_context = options[:context]
 
         raise "Can't find serializer for #{self.name}.#{name} has_one relationship." if serializer_const.nil?
 
         @_descriptor.has_one_associations << Panko::Association.new(
           name,
           options.fetch(:name, name).to_s,
-          Panko::SerializationDescriptor.build(serializer_const, options)
+          Panko::SerializationDescriptor.build(serializer_const, options, serializer_context)
         )
       end
 
